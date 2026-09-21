@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class CoreExceptionHandler {
 
-  private static final String NOT_FOUND_ERROR_MESSAGE = "error.not_found";
+  private static final String NOT_FOUND_ERROR_MESSAGE = "error.not-found";
   private static final String UNEXPECTED_ERROR_MESSAGE = "error.unexpected";
 
   private final I18nService i18nService;
