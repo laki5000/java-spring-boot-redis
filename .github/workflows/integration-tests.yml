@@ -7,6 +7,12 @@ jobs:
   integration-tests:
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
