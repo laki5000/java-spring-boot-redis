@@ -9,3 +9,8 @@ properties:
     type: string
   value:
     type: string
+  ttlSeconds:
+    type: integer
+    format: int64
+    nullable: true
+    default: null
