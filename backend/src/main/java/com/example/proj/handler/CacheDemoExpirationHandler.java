@@ -15,8 +15,8 @@ public class CacheDemoExpirationHandler implements ICacheExpirationHandler {
   @LogExecution(level = Level.INFO, logArguments = true)
   @Override
   public void onExpired(String key) {
-      if (key.equals(KEY)) {
-          log.info("Cache entry expired for key: {}", key);
-      }
+    if (key.equals(KEY)) {
+      log.info("Cache entry expired for key: {}", key);
+    }
   }
 }
