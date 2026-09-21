@@ -14,9 +14,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class CoreExceptionHandler {
 
+  private static final String NOT_FOUND_ERROR_MESSAGE = "error.not_found";
   private static final String UNEXPECTED_ERROR_MESSAGE = "error.unexpected";
 
   private final I18nService i18nService;
+
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
+    log.error("Not found exception occurred", exception);
+
+    ErrorResponse response = new ErrorResponse();
+    response.setMessage(i18nService.getMessage(NOT_FOUND_ERROR_MESSAGE));
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception exception) {

@@ -1,0 +1,51 @@
+get:
+  tags: [cache-demo]
+  operationId: getCacheDemo
+  summary: Get a value from cache
+  parameters:
+    - name: key
+      in: query
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Cached value
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/api-response-string.yml'
+    '404':
+      description: Cache entry not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/error-response.yml'
+
+put:
+  tags: [cache-demo]
+  operationId: putCacheDemo
+  summary: Store a value in cache
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/cache/demo/cache-demo-request.yml'
+  responses:
+    '204':
+      description: Value stored successfully
+
+delete:
+  tags: [cache-demo]
+  operationId: deleteCacheDemo
+  summary: Delete a value from cache
+  parameters:
+    - name: key
+      in: query
+      required: true
+      schema:
+        type: string
+  responses:
+    '204':
+      description: Value deleted successfully

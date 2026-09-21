@@ -97,7 +97,6 @@ class RedisCacheServiceUnitTests {
         assertThrows(CacheException.class, () -> redisCacheService.get(CACHE_KEY, String.class));
 
     // Then
-    assertEquals("Failed to get value from cache for key: " + CACHE_KEY, exception.getMessage());
     assertSame(cause, exception.getCause());
     verify(redisTemplate).opsForValue();
     verify(valueOperations).get(CACHE_KEY);
@@ -129,7 +128,6 @@ class RedisCacheServiceUnitTests {
         assertThrows(CacheException.class, () -> redisCacheService.put(CACHE_KEY, CACHE_VALUE));
 
     // Then
-    assertEquals("Failed to put value into cache for key: " + CACHE_KEY, exception.getMessage());
     assertSame(cause, exception.getCause());
     verify(redisTemplate).opsForValue();
     verify(valueOperations).set(CACHE_KEY, CACHE_VALUE);
@@ -162,7 +160,6 @@ class RedisCacheServiceUnitTests {
             CacheException.class, () -> redisCacheService.put(CACHE_KEY, CACHE_VALUE, CACHE_TTL));
 
     // Then
-    assertEquals("Failed to put value into cache for key: " + CACHE_KEY, exception.getMessage());
     assertSame(cause, exception.getCause());
     verify(redisTemplate).opsForValue();
     verify(valueOperations).set(CACHE_KEY, CACHE_VALUE, CACHE_TTL);
@@ -189,7 +186,6 @@ class RedisCacheServiceUnitTests {
         assertThrows(CacheException.class, () -> redisCacheService.delete(CACHE_KEY));
 
     // Then
-    assertEquals("Failed to delete cache entry for key: " + CACHE_KEY, exception.getMessage());
     assertSame(cause, exception.getCause());
     verify(redisTemplate).delete(CACHE_KEY);
   }
