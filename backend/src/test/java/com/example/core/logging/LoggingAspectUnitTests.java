@@ -1,6 +1,9 @@
 package com.example.core.logging;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.slf4j.event.Level.DEBUG;
@@ -39,7 +42,12 @@ class LoggingAspectUnitTests {
   private static final String EXPECTED_ARGUMENT_1 = "0=first: 1";
   private static final String EXPECTED_ARGUMENT_2 = "1=second: test";
   private static final String EXPECTED_ARGUMENT_3 = "2=third: true";
+  private static final String REDACTED_ARGUMENT_2 = "1=second: [REDACTED]";
 
+  private static final String STARTED = "LoggingAspectUnitTests.testMethod started";
+  private static final String COMPLETED_PREFIX =
+          "LoggingAspectUnitTests.testMethod completed in ";
+  private static final String MILLISECONDS_SUFFIX = " ms";
   private static final String ARGUMENTS_PREFIX = "arguments=";
   private static final String RESULT_PREFIX = "result=";
 
@@ -90,7 +98,9 @@ class LoggingAspectUnitTests {
     assertEquals(EXPECTED_RESULT, result);
     verify(joinPoint).proceed();
 
-    assertLogMessageContains();
+    assertEquals(2, logAppender.list.size());
+    assertStartedLog(logAppender.list.getFirst());
+    assertCompletedLog(logAppender.list.getLast());
   }
 
   @Test
@@ -99,28 +109,26 @@ class LoggingAspectUnitTests {
     RuntimeException expectedException = new RuntimeException(EXCEPTION_MESSAGE);
 
     when(joinPoint.proceed()).thenThrow(expectedException);
+    when(logExecution.level()).thenReturn(DEBUG);
 
     // When / Then
     RuntimeException actualException =
-        assertThrows(
-            RuntimeException.class, () -> loggingAspect.logExecution(joinPoint, logExecution));
+            assertThrows(
+                    RuntimeException.class, () -> loggingAspect.logExecution(joinPoint, logExecution));
 
     assertEquals(expectedException, actualException);
     verify(joinPoint).proceed();
 
-    assertTrue(logAppender.list.isEmpty());
+    assertEquals(1, logAppender.list.size());
+    assertStartedLog(logAppender.list.getFirst());
   }
 
   @Test
   void testLogExecution_shouldLogAllArguments_whenArgumentLoggingIsEnabledAndIndexesAreEmpty()
-      throws Throwable {
+          throws Throwable {
     // Given
-    Object[] arguments = {ARGUMENT_1, ARGUMENT_2, ARGUMENT_3};
+    mockArguments();
 
-    when(joinPoint.getArgs()).thenReturn(arguments);
-    when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
-    when(signature.getParameterNames())
-        .thenReturn(new String[] {ARGUMENT_NAME_1, ARGUMENT_NAME_2, ARGUMENT_NAME_3});
     when(logExecution.level()).thenReturn(DEBUG);
     when(logExecution.logArguments()).thenReturn(true);
     when(logExecution.argumentIndexes()).thenReturn(new int[0]);
@@ -133,48 +141,47 @@ class LoggingAspectUnitTests {
     assertEquals(EXPECTED_RESULT, result);
     verify(joinPoint).proceed();
 
-    String message = getLastLogMessage();
+    String startedMessage = getLogMessage(0);
+    String completedMessage = getLogMessage(1);
 
-    assertTrue(message.contains(EXPECTED_ARGUMENT_1));
-    assertTrue(message.contains(EXPECTED_ARGUMENT_2));
-    assertTrue(message.contains(EXPECTED_ARGUMENT_3));
-    assertFalse(message.contains(RESULT_PREFIX));
+    assertTrue(startedMessage.contains(STARTED));
+    assertTrue(startedMessage.contains(ARGUMENTS_PREFIX));
+    assertTrue(startedMessage.contains(EXPECTED_ARGUMENT_1));
+    assertTrue(startedMessage.contains(EXPECTED_ARGUMENT_2));
+    assertTrue(startedMessage.contains(EXPECTED_ARGUMENT_3));
+
+    assertFalse(completedMessage.contains(ARGUMENTS_PREFIX));
+    assertFalse(completedMessage.contains(RESULT_PREFIX));
   }
 
   @Test
   void
-      testLogExecution_shouldLogSelectedArguments_whenArgumentLoggingIsEnabledAndIndexesAreProvided()
+  testLogExecution_shouldLogSelectedArgumentsAndRedactOthers_whenArgumentIndexesAreProvided()
           throws Throwable {
     // Given
-    Object[] arguments = {ARGUMENT_1, ARGUMENT_2, ARGUMENT_3};
+    mockArguments();
 
-    when(joinPoint.getArgs()).thenReturn(arguments);
-    when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
-    when(signature.getParameterNames())
-        .thenReturn(new String[] {ARGUMENT_NAME_1, ARGUMENT_NAME_2, ARGUMENT_NAME_3});
     when(logExecution.level()).thenReturn(DEBUG);
     when(logExecution.logArguments()).thenReturn(true);
     when(logExecution.argumentIndexes()).thenReturn(new int[] {0, 2});
     when(logExecution.logResult()).thenReturn(false);
 
     // When
-    Object result = loggingAspect.logExecution(joinPoint, logExecution);
+    loggingAspect.logExecution(joinPoint, logExecution);
 
     // Then
-    assertEquals(EXPECTED_RESULT, result);
-    verify(joinPoint).proceed();
-
-    String message = getLastLogMessage();
+    String message = getLogMessage(0);
 
     assertTrue(message.contains(EXPECTED_ARGUMENT_1));
     assertTrue(message.contains(EXPECTED_ARGUMENT_3));
+    assertTrue(message.contains(REDACTED_ARGUMENT_2));
+
     assertFalse(message.contains(EXPECTED_ARGUMENT_2));
-    assertFalse(message.contains(RESULT_PREFIX));
   }
 
   @Test
   void testLogExecution_shouldIgnoreArgumentIndexes_whenArgumentLoggingIsDisabled()
-      throws Throwable {
+          throws Throwable {
     // Given
     when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
     when(logExecution.level()).thenReturn(DEBUG);
@@ -182,16 +189,16 @@ class LoggingAspectUnitTests {
     when(logExecution.logResult()).thenReturn(false);
 
     // When
-    Object result = loggingAspect.logExecution(joinPoint, logExecution);
+    loggingAspect.logExecution(joinPoint, logExecution);
 
     // Then
-    assertEquals(EXPECTED_RESULT, result);
-    verify(joinPoint).proceed();
+    String startedMessage = getLogMessage(0);
+    String completedMessage = getLogMessage(1);
 
-    String message = getLastLogMessage();
+    assertFalse(startedMessage.contains(ARGUMENTS_PREFIX));
+    assertFalse(startedMessage.contains(EXPECTED_ARGUMENT_1));
 
-    assertFalse(message.contains(ARGUMENTS_PREFIX));
-    assertFalse(message.contains(RESULT_PREFIX));
+    assertFalse(completedMessage.contains(ARGUMENTS_PREFIX));
   }
 
   @Test
@@ -203,28 +210,22 @@ class LoggingAspectUnitTests {
     when(logExecution.logResult()).thenReturn(true);
 
     // When
-    Object result = loggingAspect.logExecution(joinPoint, logExecution);
+    loggingAspect.logExecution(joinPoint, logExecution);
 
     // Then
-    assertEquals(EXPECTED_RESULT, result);
-    verify(joinPoint).proceed();
+    String startedMessage = getLogMessage(0);
+    String completedMessage = getLogMessage(1);
 
-    String message = getLastLogMessage();
-
-    assertTrue(message.contains(RESULT_PREFIX + EXPECTED_RESULT));
-    assertFalse(message.contains(ARGUMENTS_PREFIX));
+    assertFalse(startedMessage.contains(RESULT_PREFIX));
+    assertTrue(completedMessage.contains(RESULT_PREFIX + EXPECTED_RESULT));
   }
 
   @Test
   void testLogExecution_shouldIgnoreInvalidArgumentIndexes_whenArgumentIndexesAreProvided()
-      throws Throwable {
+          throws Throwable {
     // Given
-    Object[] arguments = {ARGUMENT_1, ARGUMENT_2, ARGUMENT_3};
+    mockArguments();
 
-    when(joinPoint.getArgs()).thenReturn(arguments);
-    when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
-    when(signature.getParameterNames())
-        .thenReturn(new String[] {ARGUMENT_NAME_1, ARGUMENT_NAME_2, ARGUMENT_NAME_3});
     when(logExecution.level()).thenReturn(DEBUG);
     when(logExecution.logArguments()).thenReturn(true);
     when(logExecution.argumentIndexes()).thenReturn(new int[] {-1, 0, 99, 2});
@@ -234,11 +235,11 @@ class LoggingAspectUnitTests {
     loggingAspect.logExecution(joinPoint, logExecution);
 
     // Then
-    String message = getLastLogMessage();
+    String message = getLogMessage(0);
 
     assertTrue(message.contains(EXPECTED_ARGUMENT_1));
     assertTrue(message.contains(EXPECTED_ARGUMENT_3));
-    assertFalse(message.contains(EXPECTED_ARGUMENT_2));
+    assertTrue(message.contains(REDACTED_ARGUMENT_2));
   }
 
   @Test
@@ -254,6 +255,7 @@ class LoggingAspectUnitTests {
 
     // Then
     assertEquals(Level.INFO, logAppender.list.getFirst().getLevel());
+    assertEquals(Level.INFO, logAppender.list.getLast().getLevel());
   }
 
   @Test
@@ -269,22 +271,37 @@ class LoggingAspectUnitTests {
 
     // Then
     assertEquals(Level.DEBUG, logAppender.list.getFirst().getLevel());
+    assertEquals(Level.DEBUG, logAppender.list.getLast().getLevel());
   }
 
-  private String getLastLogMessage() {
+  private void mockArguments() throws Throwable {
+    Object[] arguments = {ARGUMENT_1, ARGUMENT_2, ARGUMENT_3};
+
+    when(joinPoint.getArgs()).thenReturn(arguments);
+    when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
+    when(signature.getParameterNames())
+            .thenReturn(new String[] {ARGUMENT_NAME_1, ARGUMENT_NAME_2, ARGUMENT_NAME_3});
+  }
+
+  private String getLogMessage(int index) {
     List<ILoggingEvent> logs = logAppender.list;
 
     assertFalse(logs.isEmpty());
 
-    return logs.getLast().getFormattedMessage();
+    return logs.get(index).getFormattedMessage();
   }
 
-  private void assertLogMessageContains() {
-    String message = getLastLogMessage();
+  private void assertStartedLog(ILoggingEvent log) {
+    String message = log.getFormattedMessage();
 
-    for (String expectedPart :
-        new String[] {"LoggingAspectUnitTests.testMethod completed in ", " ms"}) {
-      assertTrue(message.contains(expectedPart));
-    }
+    assertTrue(message.contains(STARTED));
+    assertFalse(message.contains(RESULT_PREFIX));
+  }
+
+  private void assertCompletedLog(ILoggingEvent log) {
+    String message = log.getFormattedMessage();
+
+    assertTrue(message.contains(COMPLETED_PREFIX));
+    assertTrue(message.contains(MILLISECONDS_SUFFIX));
   }
 }
