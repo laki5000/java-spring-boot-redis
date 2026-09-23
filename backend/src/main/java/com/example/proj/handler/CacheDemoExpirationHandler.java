@@ -12,7 +12,7 @@ public class CacheDemoExpirationHandler implements ICacheExpirationHandler {
 
   private static final String KEY = "key";
 
-  @LogExecution(level = Level.INFO, logArguments = true)
+  @LogExecution(level = Level.DEBUG, logArguments = true)
   @Override
   public void onExpired(String key) {
     if (key.equals(KEY)) {

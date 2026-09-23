@@ -1,0 +1,7 @@
+put:
+  tags: [cache-demo]
+  operationId: putCachePutDemo
+  summary: Store a value using cache put
+  responses:
+    '204':
+      description: Value stored successfully

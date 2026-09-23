@@ -13,3 +13,9 @@ paths:
 
   /api/cache/demo:
     $ref: './cache/demo/cache-demo.yml'
+
+  /api/cache/demo/cacheable:
+    $ref: './cache/demo/cacheable-demo.yml'
+
+  /api/cache/demo/cache-put:
+    $ref: './cache/demo/cache-put-demo.yml'

@@ -23,8 +23,22 @@ public class CacheDemoController implements CacheDemoApi {
   }
 
   @Override
+  public ResponseEntity<ApiResponseString> getCacheableDemo() {
+    ApiResponseString response = new ApiResponseString();
+    response.setData(cacheDemoService.getCacheableDemo());
+
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
   public ResponseEntity<Void> putCacheDemo(CacheDemoRequest body) {
     cacheDemoService.putCacheDemo(body.getKey(), body.getValue(), body.getTtlSeconds());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  public ResponseEntity<Void> putCachePutDemo() {
+    cacheDemoService.putCachePutDemo();
     return ResponseEntity.noContent().build();
   }
 

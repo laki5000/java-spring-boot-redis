@@ -22,6 +22,8 @@ class CacheDemoServiceUnitTests {
   private static final long TTL_SECONDS = 60;
   private static final Duration CACHE_TTL = Duration.ofSeconds(TTL_SECONDS);
   private static final String NOT_FOUND_MESSAGE = "cache.demo.entry.not-found";
+  private static final String CACHEABLE_DEMO_VALUE = "value-for-cacheable-demo";
+  private static final String CACHE_PUT_DEMO_VALUE = "value-for-cache-put-demo";
 
   @Mock private ICacheService cacheService;
 
@@ -84,5 +86,23 @@ class CacheDemoServiceUnitTests {
 
     // Then
     verify(cacheService).delete(CACHE_KEY);
+  }
+
+  @Test
+  void testGetCacheableDemo_shouldReturnDemoValue() {
+    // When
+    String result = cacheDemoService.getCacheableDemo();
+
+    // Then
+    assertEquals(CACHEABLE_DEMO_VALUE, result);
+  }
+
+  @Test
+  void testPutCachePutDemo_shouldReturnDemoValue() {
+    // When
+    String result = cacheDemoService.putCachePutDemo();
+
+    // Then
+    assertEquals(CACHE_PUT_DEMO_VALUE, result);
   }
 }

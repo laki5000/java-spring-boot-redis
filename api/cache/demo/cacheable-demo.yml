@@ -1,0 +1,17 @@
+get:
+  tags: [cache-demo]
+  operationId: getCacheableDemo
+  summary: Get a value using cacheable
+  responses:
+    '200':
+      description: Cached value
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/api-response-string.yml'
+    '404':
+      description: Cache entry not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/error-response.yml'

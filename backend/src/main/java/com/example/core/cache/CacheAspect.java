@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -25,7 +26,8 @@ public class CacheAspect {
     Object cachedValue;
 
     try {
-      cachedValue = cacheService.get(cacheable.key(), cacheable.type());
+      Class<?> returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
+      cachedValue = cacheService.get(cacheable.key(), returnType);
     } catch (CacheException e) {
       log.warn("Cache get failed", e);
       cachedValue = null;
@@ -41,11 +43,7 @@ public class CacheAspect {
       return null;
     }
 
-    try {
-      cacheService.put(cacheable.key(), result);
-    } catch (CacheException e) {
-      log.warn("Cache put failed", e);
-    }
+    putToCache(cacheable.key(), result, cacheable.ttlSeconds());
 
     return result;
   }
@@ -59,16 +57,20 @@ public class CacheAspect {
       return null;
     }
 
+    putToCache(cachePut.key(), result, cachePut.ttlSeconds());
+
+    return result;
+  }
+
+  private void putToCache(String key, Object value, long ttlSeconds) {
     try {
-      if (cachePut.ttlSeconds() > 0) {
-        cacheService.put(cachePut.key(), result, Duration.ofSeconds(cachePut.ttlSeconds()));
+      if (ttlSeconds > 0) {
+        cacheService.put(key, value, Duration.ofSeconds(ttlSeconds));
       } else {
-        cacheService.put(cachePut.key(), result);
+        cacheService.put(key, value);
       }
     } catch (CacheException e) {
       log.warn("Cache put failed", e);
     }
-
-    return result;
   }
 }

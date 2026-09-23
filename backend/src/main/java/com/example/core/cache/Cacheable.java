@@ -11,5 +11,5 @@ public @interface Cacheable {
 
   String key();
 
-  Class<?> type();
+  long ttlSeconds() default 0;
 }
