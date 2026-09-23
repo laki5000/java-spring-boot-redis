@@ -44,8 +44,7 @@ class CacheDemoControllerIntegrationTests {
 
   private static final String CACHEABLE_DEMO_VALUE = "value-for-cacheable-demo";
 
-  private static final String CACHE_ENTRY_EXPIRED_LOG =
-          "Cache entry expired for key: " + CACHE_KEY;
+  private static final String CACHE_ENTRY_EXPIRED_LOG = "Cache entry expired for key: " + CACHE_KEY;
 
   @Autowired private MockMvc mockMvc;
 
@@ -82,16 +81,16 @@ class CacheDemoControllerIntegrationTests {
 
     // When / Then
     mockMvc
-            .perform(get(CACHE_DEMO_ENDPOINT).param(PARAM_KEY, CACHE_KEY))
-            .andExpect(status().isOk());
+        .perform(get(CACHE_DEMO_ENDPOINT).param(PARAM_KEY, CACHE_KEY))
+        .andExpect(status().isOk());
   }
 
   @Test
   void testGetCacheDemo_shouldReturnNotFound_whenCacheEntryDoesNotExist() throws Exception {
     // When / Then
     mockMvc
-            .perform(get(CACHE_DEMO_ENDPOINT).param(PARAM_KEY, CACHE_KEY))
-            .andExpect(status().isNotFound());
+        .perform(get(CACHE_DEMO_ENDPOINT).param(PARAM_KEY, CACHE_KEY))
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -101,11 +100,11 @@ class CacheDemoControllerIntegrationTests {
 
     // When
     mockMvc
-            .perform(
-                    put(CACHE_DEMO_ENDPOINT)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNoContent());
+        .perform(
+            put(CACHE_DEMO_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isNoContent());
 
     // Then
     assertEquals(CACHE_VALUE, cacheService.get(CACHE_KEY, String.class));
@@ -118,11 +117,11 @@ class CacheDemoControllerIntegrationTests {
 
     // When
     mockMvc
-            .perform(
-                    put(CACHE_DEMO_ENDPOINT)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNoContent());
+        .perform(
+            put(CACHE_DEMO_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isNoContent());
 
     // Then
     assertEquals(CACHE_VALUE, cacheService.get(CACHE_KEY, String.class));
@@ -135,8 +134,8 @@ class CacheDemoControllerIntegrationTests {
 
     // When
     mockMvc
-            .perform(delete(CACHE_DEMO_ENDPOINT).param(PARAM_KEY, CACHE_KEY))
-            .andExpect(status().isNoContent());
+        .perform(delete(CACHE_DEMO_ENDPOINT).param(PARAM_KEY, CACHE_KEY))
+        .andExpect(status().isNoContent());
 
     // Then
     assertNull(cacheService.get(CACHE_KEY, String.class));
@@ -149,11 +148,11 @@ class CacheDemoControllerIntegrationTests {
 
     // When
     mockMvc
-            .perform(
-                    put(CACHE_DEMO_ENDPOINT)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNoContent());
+        .perform(
+            put(CACHE_DEMO_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isNoContent());
 
     // Then
     assertEquals(CACHE_VALUE, cacheService.get(CACHE_KEY, String.class));
@@ -161,27 +160,26 @@ class CacheDemoControllerIntegrationTests {
     waitForExpiration();
 
     assertTrue(
-            listAppender.list.stream()
-                    .anyMatch(
-                            event ->
-                                    event.getLevel() == Level.INFO
-                                            && CACHE_ENTRY_EXPIRED_LOG.equals(event.getFormattedMessage())));
+        listAppender.list.stream()
+            .anyMatch(
+                event ->
+                    event.getLevel() == Level.INFO
+                        && CACHE_ENTRY_EXPIRED_LOG.equals(event.getFormattedMessage())));
   }
 
   @Test
   void testGetCacheableDemo_shouldReturnExpectedValue() throws Exception {
     // When
     String response =
-            mockMvc
-                    .perform(get(CACHEABLE_DEMO_ENDPOINT))
-                    .andExpect(status().isOk())
-                    .andReturn()
-                    .getResponse()
-                    .getContentAsString();
+        mockMvc
+            .perform(get(CACHEABLE_DEMO_ENDPOINT))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
 
     // Then
-    ApiResponseString apiResponse =
-            objectMapper.readValue(response, ApiResponseString.class);
+    ApiResponseString apiResponse = objectMapper.readValue(response, ApiResponseString.class);
 
     assertEquals(CACHEABLE_DEMO_VALUE, apiResponse.getData());
   }
@@ -189,9 +187,7 @@ class CacheDemoControllerIntegrationTests {
   @Test
   void testPutCachePutDemo_shouldExecuteSuccessfully() throws Exception {
     // When / Then
-    mockMvc
-            .perform(put(CACHE_PUT_DEMO_ENDPOINT))
-            .andExpect(status().isNoContent());
+    mockMvc.perform(put(CACHE_PUT_DEMO_ENDPOINT)).andExpect(status().isNoContent());
   }
 
   private CacheDemoRequest createRequest(Long ttlSeconds) {

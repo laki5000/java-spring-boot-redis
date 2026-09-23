@@ -120,8 +120,7 @@ class CacheAspectUnitTests {
   @Test
   void testCacheable_shouldProceedAndCacheResult_whenCacheGetFails() throws Throwable {
     // Given
-    CacheException cacheException =
-            new CacheException(EXCEPTION_MESSAGE, new RuntimeException());
+    CacheException cacheException = new CacheException(EXCEPTION_MESSAGE, new RuntimeException());
 
     when(cacheable.key()).thenReturn(CACHE_KEY);
     when(joinPoint.getSignature()).thenReturn(methodSignature);
@@ -142,8 +141,7 @@ class CacheAspectUnitTests {
   @Test
   void testCacheable_shouldReturnResult_whenCachePutFails() throws Throwable {
     // Given
-    CacheException cacheException =
-            new CacheException(EXCEPTION_MESSAGE, new RuntimeException());
+    CacheException cacheException = new CacheException(EXCEPTION_MESSAGE, new RuntimeException());
 
     when(cacheable.key()).thenReturn(CACHE_KEY);
     when(joinPoint.getSignature()).thenReturn(methodSignature);
@@ -175,8 +173,7 @@ class CacheAspectUnitTests {
 
     // When
     RuntimeException actualException =
-            assertThrows(
-                    RuntimeException.class, () -> cacheAspect.cacheable(joinPoint, cacheable));
+        assertThrows(RuntimeException.class, () -> cacheAspect.cacheable(joinPoint, cacheable));
 
     // Then
     assertSame(expectedException, actualException);
@@ -232,8 +229,7 @@ class CacheAspectUnitTests {
   @Test
   void testCachePut_shouldReturnResult_whenCachePutFails() throws Throwable {
     // Given
-    CacheException cacheException =
-            new CacheException(EXCEPTION_MESSAGE, new RuntimeException());
+    CacheException cacheException = new CacheException(EXCEPTION_MESSAGE, new RuntimeException());
 
     when(cachePut.key()).thenReturn(CACHE_KEY);
     when(cachePut.ttlSeconds()).thenReturn(0L);
@@ -258,8 +254,7 @@ class CacheAspectUnitTests {
 
     // When
     RuntimeException actualException =
-            assertThrows(
-                    RuntimeException.class, () -> cacheAspect.cachePut(joinPoint, cachePut));
+        assertThrows(RuntimeException.class, () -> cacheAspect.cachePut(joinPoint, cachePut));
 
     // Then
     assertSame(expectedException, actualException);
