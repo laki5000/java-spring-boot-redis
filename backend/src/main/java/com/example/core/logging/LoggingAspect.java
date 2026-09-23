@@ -25,7 +25,7 @@ public class LoggingAspect {
 
   @Around("@annotation(logExecution)")
   public Object logExecution(ProceedingJoinPoint joinPoint, LogExecution logExecution)
-          throws Throwable {
+      throws Throwable {
 
     String className = joinPoint.getTarget().getClass().getSimpleName();
     String methodName = joinPoint.getSignature().getName();
@@ -44,38 +44,31 @@ public class LoggingAspect {
   }
 
   private void logStarted(
-          LogExecution annotation,
-          String className,
-          String methodName,
-          ProceedingJoinPoint joinPoint) {
+      LogExecution annotation, String className, String methodName, ProceedingJoinPoint joinPoint) {
 
     String message =
-            className +
-                    "." +
-                    methodName +
-                    STARTED +
-                    (annotation.logArguments()
-                            ? ARGUMENTS_PREFIX + getArgumentsToLog(joinPoint, annotation)
-                            : "");
+        className
+            + "."
+            + methodName
+            + STARTED
+            + (annotation.logArguments()
+                ? ARGUMENTS_PREFIX + getArgumentsToLog(joinPoint, annotation)
+                : "");
 
     log(annotation.level(), message);
   }
 
   private void logCompleted(
-          LogExecution annotation,
-          String className,
-          String methodName,
-          Object result,
-          long duration) {
+      LogExecution annotation, String className, String methodName, Object result, long duration) {
 
     String message =
-            className +
-                    "." +
-                    methodName +
-                    COMPLETED_IN +
-                    duration +
-                    MILLISECONDS_SUFFIX +
-                    (annotation.logResult() ? RESULT_PREFIX + result : "");
+        className
+            + "."
+            + methodName
+            + COMPLETED_IN
+            + duration
+            + MILLISECONDS_SUFFIX
+            + (annotation.logResult() ? RESULT_PREFIX + result : "");
 
     log(annotation.level(), message);
   }
@@ -87,16 +80,16 @@ public class LoggingAspect {
     int[] indexes = annotation.argumentIndexes();
 
     return IntStream.range(0, arguments.length)
-            .mapToObj(
-                    index -> {
-                      boolean shouldLogValue =
-                              indexes.length == 0 || Arrays.stream(indexes).anyMatch(i -> i == index);
+        .mapToObj(
+            index -> {
+              boolean shouldLogValue =
+                  indexes.length == 0 || Arrays.stream(indexes).anyMatch(i -> i == index);
 
-                      Object value = shouldLogValue ? arguments[index] : REDACTED;
+              Object value = shouldLogValue ? arguments[index] : REDACTED;
 
-                      return formatArgument(index, parameterNames[index], value);
-                    })
-            .collect(Collectors.joining(", ", "{", "}"));
+              return formatArgument(index, parameterNames[index], value);
+            })
+        .collect(Collectors.joining(", ", "{", "}"));
   }
 
   private String formatArgument(int index, String name, Object value) {

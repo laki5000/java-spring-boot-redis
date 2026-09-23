@@ -45,8 +45,7 @@ class LoggingAspectUnitTests {
   private static final String REDACTED_ARGUMENT_2 = "1=second: [REDACTED]";
 
   private static final String STARTED = "LoggingAspectUnitTests.testMethod started";
-  private static final String COMPLETED_PREFIX =
-          "LoggingAspectUnitTests.testMethod completed in ";
+  private static final String COMPLETED_PREFIX = "LoggingAspectUnitTests.testMethod completed in ";
   private static final String MILLISECONDS_SUFFIX = " ms";
   private static final String ARGUMENTS_PREFIX = "arguments=";
   private static final String RESULT_PREFIX = "result=";
@@ -113,8 +112,8 @@ class LoggingAspectUnitTests {
 
     // When / Then
     RuntimeException actualException =
-            assertThrows(
-                    RuntimeException.class, () -> loggingAspect.logExecution(joinPoint, logExecution));
+        assertThrows(
+            RuntimeException.class, () -> loggingAspect.logExecution(joinPoint, logExecution));
 
     assertEquals(expectedException, actualException);
     verify(joinPoint).proceed();
@@ -125,7 +124,7 @@ class LoggingAspectUnitTests {
 
   @Test
   void testLogExecution_shouldLogAllArguments_whenArgumentLoggingIsEnabledAndIndexesAreEmpty()
-          throws Throwable {
+      throws Throwable {
     // Given
     mockArguments();
 
@@ -155,9 +154,8 @@ class LoggingAspectUnitTests {
   }
 
   @Test
-  void
-  testLogExecution_shouldLogSelectedArgumentsAndRedactOthers_whenArgumentIndexesAreProvided()
-          throws Throwable {
+  void testLogExecution_shouldLogSelectedArgumentsAndRedactOthers_whenArgumentIndexesAreProvided()
+      throws Throwable {
     // Given
     mockArguments();
 
@@ -181,7 +179,7 @@ class LoggingAspectUnitTests {
 
   @Test
   void testLogExecution_shouldIgnoreArgumentIndexes_whenArgumentLoggingIsDisabled()
-          throws Throwable {
+      throws Throwable {
     // Given
     when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
     when(logExecution.level()).thenReturn(DEBUG);
@@ -222,7 +220,7 @@ class LoggingAspectUnitTests {
 
   @Test
   void testLogExecution_shouldIgnoreInvalidArgumentIndexes_whenArgumentIndexesAreProvided()
-          throws Throwable {
+      throws Throwable {
     // Given
     mockArguments();
 
@@ -280,7 +278,7 @@ class LoggingAspectUnitTests {
     when(joinPoint.getArgs()).thenReturn(arguments);
     when(joinPoint.proceed()).thenReturn(EXPECTED_RESULT);
     when(signature.getParameterNames())
-            .thenReturn(new String[] {ARGUMENT_NAME_1, ARGUMENT_NAME_2, ARGUMENT_NAME_3});
+        .thenReturn(new String[] {ARGUMENT_NAME_1, ARGUMENT_NAME_2, ARGUMENT_NAME_3});
   }
 
   private String getLogMessage(int index) {

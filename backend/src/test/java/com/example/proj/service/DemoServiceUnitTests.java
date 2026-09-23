@@ -46,7 +46,7 @@ class DemoServiceUnitTests {
   void testGetDemoMessage_shouldThrowException_whenErrorIsTrue() {
     // When / Then
     RuntimeException exception =
-            assertThrows(RuntimeException.class, () -> demoService.getDemoMessage(true));
+        assertThrows(RuntimeException.class, () -> demoService.getDemoMessage(true));
 
     assertEquals(DEMO_EXCEPTION_MESSAGE, exception.getMessage());
   }
