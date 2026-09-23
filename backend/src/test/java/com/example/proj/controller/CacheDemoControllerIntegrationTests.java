@@ -42,11 +42,7 @@ class CacheDemoControllerIntegrationTests {
   private static final String CACHE_VALUE = "value";
   private static final long CACHE_TTL_SECONDS = 3;
 
-  private static final String CACHEABLE_DEMO_KEY = "cacheable-demo";
   private static final String CACHEABLE_DEMO_VALUE = "value-for-cacheable-demo";
-
-  private static final String CACHE_PUT_DEMO_KEY = "cache-put-demo";
-  private static final String CACHE_PUT_DEMO_VALUE = "value-for-cache-put-demo";
 
   private static final String CACHE_ENTRY_EXPIRED_LOG =
           "Cache entry expired for key: " + CACHE_KEY;
@@ -63,8 +59,6 @@ class CacheDemoControllerIntegrationTests {
   @BeforeEach
   void setUp() {
     cacheService.delete(CACHE_KEY);
-    cacheService.delete(CACHEABLE_DEMO_KEY);
-    cacheService.delete(CACHE_PUT_DEMO_KEY);
 
     logger = (Logger) LoggerFactory.getLogger(CacheDemoExpirationHandler.class);
 
@@ -79,8 +73,6 @@ class CacheDemoControllerIntegrationTests {
     logger.detachAppender(listAppender);
 
     cacheService.delete(CACHE_KEY);
-    cacheService.delete(CACHEABLE_DEMO_KEY);
-    cacheService.delete(CACHE_PUT_DEMO_KEY);
   }
 
   @Test
