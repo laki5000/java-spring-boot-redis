@@ -1,5 +1,8 @@
 package com.example.integration.redis;
 
+import com.example.core.cache.ICacheExpirationHandler;
+import com.example.core.cache.ICacheService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -10,6 +13,7 @@ import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@ConditionalOnProperty(name = "cache.provider", havingValue = "redis")
 public class RedisConfig {
 
   @Bean
@@ -38,5 +42,17 @@ public class RedisConfig {
     container.addMessageListener(expirationListener, new PatternTopic("__keyevent@*__:expired"));
 
     return container;
+  }
+
+  @Bean
+  public ICacheService cacheService(RedisTemplate<String, Object> redisTemplate) {
+
+    return new RedisCacheService(redisTemplate);
+  }
+
+  @Bean
+  public RedisExpirationListener redisExpirationListener(ICacheExpirationHandler handler) {
+
+    return new RedisExpirationListener(handler);
   }
 }
