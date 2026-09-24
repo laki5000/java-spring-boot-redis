@@ -1,4 +1,4 @@
-package com.example.proj.controller;
+package com.example.proj.controller.v1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -32,9 +32,9 @@ import tools.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class CacheDemoControllerIntegrationTests {
 
-  private static final String CACHE_DEMO_ENDPOINT = "/api/cache/demo";
-  private static final String CACHEABLE_DEMO_ENDPOINT = "/api/cache/demo/cacheable";
-  private static final String CACHE_PUT_DEMO_ENDPOINT = "/api/cache/demo/cache-put";
+  private static final String CACHE_DEMO_ENDPOINT = "/api/v1/cache/demo";
+  private static final String CACHEABLE_DEMO_ENDPOINT = "/api/v1/cache/demo/cacheable";
+  private static final String CACHE_PUT_DEMO_ENDPOINT = "/api/v1/cache/demo/cache-put";D
 
   private static final String PARAM_KEY = "key";
 

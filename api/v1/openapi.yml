@@ -8,14 +8,14 @@ servers:
   - url: http://localhost:8080
 
 paths:
-  /api/demo:
+  /api/v1/demo:
     $ref: './demo/demo.yml'
 
-  /api/cache/demo:
+  /api/v1/cache/demo:
     $ref: './cache/demo/cache-demo.yml'
 
-  /api/cache/demo/cacheable:
+  /api/v1/cache/demo/cacheable:
     $ref: './cache/demo/cacheable-demo.yml'
 
-  /api/cache/demo/cache-put:
+  /api/v1/cache/demo/cache-put:
     $ref: './cache/demo/cache-put-demo.yml'
