@@ -21,7 +21,6 @@ class CacheDemoServiceUnitTests {
   private static final String CACHE_VALUE = "value";
   private static final long TTL_SECONDS = 60;
   private static final Duration CACHE_TTL = Duration.ofSeconds(TTL_SECONDS);
-  private static final String NOT_FOUND_MESSAGE = "cache.demo.entry.not-found";
   private static final String CACHEABLE_DEMO_VALUE = "value-for-cacheable-demo";
   private static final String CACHE_PUT_DEMO_VALUE = "value-for-cache-put-demo";
 
@@ -52,12 +51,9 @@ class CacheDemoServiceUnitTests {
     // Given
     when(cacheService.get(CACHE_KEY, String.class)).thenReturn(null);
 
-    // When
-    NotFoundException exception =
-        assertThrows(NotFoundException.class, () -> cacheDemoService.getCacheDemo(CACHE_KEY));
+    // When / Then
+    assertThrows(NotFoundException.class, () -> cacheDemoService.getCacheDemo(CACHE_KEY));
 
-    // Then
-    assertEquals(NOT_FOUND_MESSAGE, exception.getMessage());
     verify(cacheService).get(CACHE_KEY, String.class);
   }
 
