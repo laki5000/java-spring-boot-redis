@@ -5,7 +5,6 @@ import com.example.core.exception.CacheException;
 import com.example.core.logging.LogExecution;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.event.Level;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @RequiredArgsConstructor
@@ -13,7 +12,7 @@ public class RedisCacheService implements ICacheService {
 
   private final RedisTemplate<String, Object> redisTemplate;
 
-  @LogExecution(level = Level.DEBUG, logArguments = true)
+  @LogExecution(logArguments = true)
   @Override
   public <T> T get(String key, Class<T> type) {
     try {
@@ -26,7 +25,6 @@ public class RedisCacheService implements ICacheService {
   }
 
   @LogExecution(
-      level = Level.DEBUG,
       logArguments = true,
       argumentIndexes = {0})
   @Override
@@ -39,7 +37,6 @@ public class RedisCacheService implements ICacheService {
   }
 
   @LogExecution(
-      level = Level.DEBUG,
       logArguments = true,
       argumentIndexes = {0, 2})
   @Override
@@ -51,7 +48,7 @@ public class RedisCacheService implements ICacheService {
     }
   }
 
-  @LogExecution(level = Level.DEBUG, logArguments = true)
+  @LogExecution(logArguments = true)
   @Override
   public void delete(String key) {
     try {

@@ -25,7 +25,7 @@ public class CacheDemoService {
 
   private final ICacheService cacheService;
 
-  @LogExecution(level = Level.DEBUG, logArguments = true)
+  @LogExecution(level = Level.INFO, logArguments = true)
   public String getCacheDemo(String key) {
     String value = cacheService.get(key, String.class);
 
@@ -37,7 +37,7 @@ public class CacheDemoService {
   }
 
   @LogExecution(
-      level = Level.DEBUG,
+      level = Level.INFO,
       logArguments = true,
       argumentIndexes = {0, 2})
   public void putCacheDemo(String key, String value, Long ttlSeconds) {
@@ -49,13 +49,13 @@ public class CacheDemoService {
     cacheService.put(key, value);
   }
 
-  @LogExecution(level = Level.DEBUG, logArguments = true)
+  @LogExecution(level = Level.INFO, logArguments = true)
   public void deleteCacheDemo(String key) {
     cacheService.delete(key);
   }
 
   @Cacheable(key = CACHEABLE_DEMO_KEY, ttlSeconds = CACHEABLE_DEMO_TTL_SECONDS)
-  @LogExecution(level = Level.DEBUG, logArguments = true)
+  @LogExecution(level = Level.INFO, logArguments = true)
   public String getCacheableDemo() {
     sleep();
 
@@ -64,7 +64,7 @@ public class CacheDemoService {
 
   @CachePut(key = CACHE_PUT_DEMO_KEY, ttlSeconds = CACHEABLE_DEMO_TTL_SECONDS)
   @LogExecution(
-      level = Level.DEBUG,
+      level = Level.INFO,
       logArguments = true,
       argumentIndexes = {0})
   public String putCachePutDemo() {
