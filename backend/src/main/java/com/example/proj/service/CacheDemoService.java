@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CacheDemoService {
 
-  private static final String CACHE_DEMO_ENTRY_NOT_FOUND = "cache.demo.entry.not-found";
-
   private static final String CACHEABLE_DEMO_KEY = "cacheable-demo";
   private static final String CACHE_PUT_DEMO_KEY = "cache-put-demo";
   private static final String CACHEABLE_DEMO_VALUE = "value-for-cacheable-demo";
@@ -30,7 +28,7 @@ public class CacheDemoService {
     String value = cacheService.get(key, String.class);
 
     if (value == null) {
-      throw new NotFoundException(CACHE_DEMO_ENTRY_NOT_FOUND);
+      throw new NotFoundException("Cache entry not found for key: " + key);
     }
 
     return value;
