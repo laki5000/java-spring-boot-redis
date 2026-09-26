@@ -2,7 +2,7 @@ package com.example.proj.controller.v1;
 
 import com.example.generated.api.CacheDemoApi;
 import com.example.generated.dto.ApiResponseString;
-import com.example.generated.dto.CacheDemoRequest;
+import com.example.generated.dto.PutCacheDemoRequest;
 import com.example.proj.service.CacheDemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class CacheDemoController implements CacheDemoApi {
   }
 
   @Override
-  public ResponseEntity<Void> putCacheDemo(CacheDemoRequest body) {
+  public ResponseEntity<Void> putCacheDemo(PutCacheDemoRequest body) {
     cacheDemoService.putCacheDemo(body.getKey(), body.getValue(), body.getTtlSeconds());
     return ResponseEntity.noContent().build();
   }

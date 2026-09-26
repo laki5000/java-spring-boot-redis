@@ -14,4 +14,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/error-response.yml'
+            $ref: '../../components/schemas/api-error-response.yml'
+
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/api-error-response.yml'

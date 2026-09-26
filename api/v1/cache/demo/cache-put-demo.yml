@@ -5,3 +5,10 @@ put:
   responses:
     '204':
       description: Value stored successfully
+
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/api-error-response.yml'

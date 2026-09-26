@@ -14,7 +14,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import com.example.core.cache.ICacheService;
 import com.example.generated.dto.ApiResponseString;
-import com.example.generated.dto.CacheDemoRequest;
+import com.example.generated.dto.PutCacheDemoRequest;
 import com.example.proj.handler.CacheDemoExpirationHandler;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
@@ -96,7 +96,7 @@ class CacheDemoControllerIntegrationTests {
   @Test
   void testPutCacheDemo_shouldStoreValue() throws Exception {
     // Given
-    CacheDemoRequest request = createRequest(null);
+    PutCacheDemoRequest request = createRequest(null);
 
     // When
     mockMvc
@@ -113,7 +113,7 @@ class CacheDemoControllerIntegrationTests {
   @Test
   void testPutCacheDemo_shouldStoreValueWithTtl_whenTtlIsProvided() throws Exception {
     // Given
-    CacheDemoRequest request = createRequest(CACHE_TTL_SECONDS);
+    PutCacheDemoRequest request = createRequest(CACHE_TTL_SECONDS);
 
     // When
     mockMvc
@@ -144,7 +144,7 @@ class CacheDemoControllerIntegrationTests {
   @Test
   void testPutCacheDemo_shouldLogExpiration_whenCacheEntryExpires() throws Exception {
     // Given
-    CacheDemoRequest request = createRequest(CACHE_TTL_SECONDS);
+    PutCacheDemoRequest request = createRequest(CACHE_TTL_SECONDS);
 
     // When
     mockMvc
@@ -190,8 +190,8 @@ class CacheDemoControllerIntegrationTests {
     mockMvc.perform(put(CACHE_PUT_DEMO_ENDPOINT)).andExpect(status().isNoContent());
   }
 
-  private CacheDemoRequest createRequest(Long ttlSeconds) {
-    CacheDemoRequest request = new CacheDemoRequest();
+  private PutCacheDemoRequest createRequest(Long ttlSeconds) {
+    PutCacheDemoRequest request = new PutCacheDemoRequest();
     request.setKey(CACHE_KEY);
     request.setValue(CACHE_VALUE);
     request.setTtlSeconds(ttlSeconds);

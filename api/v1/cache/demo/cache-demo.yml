@@ -20,7 +20,14 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/error-response.yml'
+            $ref: '../../components/schemas/api-error-response.yml'
+
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/api-error-response.yml'
 
 put:
   tags: [cache-demo]
@@ -31,7 +38,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/cache/demo/cache-demo-request.yml'
+          $ref: '../../components/schemas/cache/demo/put-cache-demo-request.yml'
   responses:
     '204':
       description: Value stored successfully
