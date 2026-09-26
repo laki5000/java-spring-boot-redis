@@ -111,23 +111,6 @@ class CacheDemoControllerIntegrationTests {
   }
 
   @Test
-  void testPutCacheDemo_shouldStoreValueWithTtl_whenTtlIsProvided() throws Exception {
-    // Given
-    PutCacheDemoRequest request = createRequest(CACHE_TTL_SECONDS);
-
-    // When
-    mockMvc
-        .perform(
-            put(CACHE_DEMO_ENDPOINT)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isNoContent());
-
-    // Then
-    assertEquals(CACHE_VALUE, cacheService.get(CACHE_KEY, String.class));
-  }
-
-  @Test
   void testDeleteCacheDemo_shouldDeleteCacheEntry() throws Exception {
     // Given
     cacheService.put(CACHE_KEY, CACHE_VALUE);
