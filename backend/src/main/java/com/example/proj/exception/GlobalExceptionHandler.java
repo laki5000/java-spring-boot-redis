@@ -1,5 +1,6 @@
-package com.example.core.exception;
+package com.example.proj.exception;
 
+import com.example.core.exception.NotFoundException;
 import com.example.core.message.I18nService;
 import com.example.generated.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class CoreExceptionHandler {
+public class GlobalExceptionHandler {
 
   private static final String BAD_REQUEST_ERROR_MESSAGE = "error.bad-request";
   private static final String NOT_FOUND_ERROR_MESSAGE = "error.not-found";
