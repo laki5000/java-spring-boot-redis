@@ -6,7 +6,7 @@ This project is derived from the [Java Spring Boot Core](https://github.com/laki
 
 ## Redis Integration
 
-The project provides a Redis integration through `RedisCacheService`.
+The project provides a caching abstraction through ICacheService with a Redis implementation.
 
 It supports storing, retrieving, and removing cached values, including cache expiration using TTL.
 
@@ -34,7 +34,7 @@ The project contains demo endpoints for testing and demonstrating the caching fu
 
 Caching can be used in two ways:
 
-* Directly through `RedisCacheService`
+* Directly through `ICacheService`
 * Through the `@Cacheable` and `@PutCache` annotations
 
-The annotation-based approach uses `RedisCacheService` internally.
+The annotation-based approach uses `ICacheService` internally.
