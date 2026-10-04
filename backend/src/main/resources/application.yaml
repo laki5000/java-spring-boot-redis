@@ -1,6 +1,6 @@
 spring:
   application:
-    name: com.example.core
+    name: java-spring-boot-redis
   data:
     redis:
       host: localhost
@@ -8,7 +8,7 @@ spring:
 
 logging:
   level:
-    com.example.core: DEBUG
+    com.example: DEBUG
 
 cache:
   provider: redis
